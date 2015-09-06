@@ -16,9 +16,9 @@ header {
   margin: 1em auto;
 }
 
-nav li {
+#mainMenu li {
   display: inline-block;
-  padding-right: 5%;
+  padding-right: 5%;  
 }
 
 main {
