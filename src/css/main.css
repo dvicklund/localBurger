@@ -1,3 +1,28 @@
-* {
-  background-color: #eef;
+a {
+  color: #295;
+  text-decoration: none;
 }
+
+a:hover {
+  color: #051;
+}
+
+a:visited {
+  color: #532;
+}
+
+header {
+  width: 100%;
+  margin: 1em auto;
+}
+
+nav li {
+  display: inline-block;
+  padding-right: 5%;
+}
+
+main {
+  width: 90%;
+  margin: 2em auto;
+}
+
