@@ -54,6 +54,7 @@ td {
 .menuExtraInfo {
   border-bottom: none;
   text-align: center;
+  column-span: 2;
 }
 
 .menuItem {
@@ -78,3 +79,6 @@ td {
   font-weight: normal;
 }
 
+.glutenFreeIcon {
+  height: 1em;
+}
