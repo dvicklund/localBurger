@@ -3,7 +3,7 @@ To do:
 - Enhance structural HTML
 - Pick basic layout and design
 - Flesh out stylesheet
-- Convert menus from PDF to HTML
+//Done - Convert menus from PDF to HTML
 - Get more pictures
 - Add sponsors page or logos to splash page
 - Fill events page

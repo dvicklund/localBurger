@@ -11,6 +11,11 @@ a:visited {
   color: #532;
 }
 
+aside {
+  width: 81%;
+  margin: 0 auto;
+}
+
 header {
   width: 100%;
   margin: 1em auto;
@@ -24,5 +29,52 @@ header {
 main {
   width: 90%;
   margin: 2em auto;
+}
+
+table {
+  width: 90%;
+  margin: 0 auto;
+}
+
+#addOnTable {
+  border: solid 2px black;
+}
+
+td {
+  padding-top: 0.5em;
+}
+
+.menuSectionHead {
+  font-size: larger;
+  font-weight: bold;
+  border-bottom: solid 3px black;
+  column-span: 2;
+}
+
+.menuExtraInfo {
+  border-bottom: none;
+  text-align: center;
+}
+
+.menuItem {
+  font-weight: bold;
+  border-bottom: dotted 1px black;
+}
+
+.menuSecondaryItem {
+  border-bottom: dotted 1px black;
+  padding-left: 1em;
+  padding-top: 0.5em;
+}
+
+#addOnTable .itemPrice {
+  text-align: right;
+  border-bottom: dotted 1px black;
+  padding-right: 1em;
+  padding-top: 0.5em;
+}
+
+.menuItem em {
+  font-weight: normal;
 }
 
