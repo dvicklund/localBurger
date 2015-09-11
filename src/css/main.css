@@ -82,3 +82,11 @@ td {
 .glutenFreeIcon {
   height: 1em;
 }
+
+#locationMap {
+  background-color: #fff;
+  padding: 2%;
+  border: 1px solid #D6D4C8;
+  width: 96%;
+  height: 50em;
+}
