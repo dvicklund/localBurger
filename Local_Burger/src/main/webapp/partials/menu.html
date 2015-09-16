@@ -1,5 +1,5 @@
 <h1 style="text-align:center;">Check out our events</h1>
-<div ng-controller="MenuCtl">
+<div ng-controller="MenuCtl" ng-init="setSelectedTab()">
     <div class="row">
         <div class="col-lg-12">
             <div id="messages" class="alert alert-{{alertStatus}}" ng-show="messages">
@@ -7,7 +7,6 @@
                 <i class="dismiss-messages pull-right glyphicon glyphicon-remove" ng-click="messages = ''"
                    ng-show="messages"></i>
             </div>
-            <img class="spinner" src="/img/ajax-loader.gif" ng-show="loading"/>
         </div>
     </div>
 
@@ -27,17 +26,184 @@
 	<tab select="getDinner()" heading="Dinner"></tab>
 	<tab select="getCatering()" heading="Catering"></tab>
 	</tabset>
+	<img class="spinner" src="/images/ajax-loader.gif" ng-show="loading"/>
 	<div ng-show="selectedTab == 'BRUNCH'">
-		<h1>Brunch</h1>
+		<h1 class="menuSectionHead">LIBATIONS</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'BRUNCH' | filter:'LIBATIONS'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+
+		</table>
+		<h1 class="menuSectionHead">STARTERS</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'BRUNCH' | filter:'STARTERS'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+
+		</table>
+		<h1 class="menuSectionHead">SALADS</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'BRUNCH' | filter:'SALADS'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+
+		</table>
+		<h1 class="menuSectionHead">MAINS</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'BRUNCH' | filter:'MAINS'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+
+		</table>
+		<h1 class="menuSectionHead">SIDES</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'BRUNCH' | filter:'SIDES'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+		</table>
+								
 	</div>
 	<div ng-show="selectedTab == 'HAPPYHOUR'">
-		<h1>Happy Hour</h1>
+		<h1 class="menuSectionHead">Food</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'HAPPYHOUR' | filter:'FOOD'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+
+		</table>
+		<h1 class="menuSectionHead">Drinks</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'HAPPYHOUR' | filter:'DRINKS'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+
+		</table>
 	</div>
 	<div ng-show="selectedTab == 'DINNER'">
-		<h1>Dinner</h1>
+		<h1 class="menuSectionHead">STARTERS</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'DINNER' | filter:'STARTERS'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+
+		</table>
+		<h1 class="menuSectionHead">SALADS</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'DINNER' | filter:'SALADS'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+
+		</table>
+		<h1 class="menuSectionHead">SIDES</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'DINNER' | filter:'SIDES'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+
+		</table>
+		<h1 class="menuSectionHead">BURGERS</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'DINNER' | filter:'BURGERS'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+		</table>
+		<table id="addOnTable">
+			<thead>
+            	<tr>
+            		<th colspan="2">LOCAL ADD-ONS</th>
+                </tr>
+            </thead>
+			<tbody ng-repeat="menuItem in menuItems | filter:'DINNER' | filter:'ADD_ONS'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+		</table>
+		<h1 class="menuSectionHead">COCKTAILS</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'DINNER' | filter:'COCKTAILS'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+		</table>
+		<h1 class="menuSectionHead">DESSERTS</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'DINNER' | filter:'DESSERTS'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+		</table>				
 	</div>
 	<div ng-show="selectedTab == 'CATERING'">
-		<h1>Catering</h1>
+		<h1 class="menuSectionHead">Sandwiches & Wraps</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'CATERING' | filter:'SANDWICHES_&_WRAPS'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+
+		</table>
+		<h1 class="menuSectionHead">SALADS</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'CATERING' | filter:'SALADS'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+
+		</table>
+		<h1 class="menuSectionHead">PLATTERS</h1>
+		<table>
+			<tbody ng-repeat="menuItem in menuItems | filter:'CATERING' | filter:'PLATTERS'">
+	          	<tr>
+		            <td class="menuItem">{{menuItem.name}}<br><em>{{menuItem.description}}</em></td>
+		            <td class="itemPrice">{{menuItem.price | currency}}</td>
+		        </tr>
+			 </tbody>
+
+		</table>
 	</div>
 </div> 
 	

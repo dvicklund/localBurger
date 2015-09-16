@@ -83,7 +83,7 @@ public class LocalBurgerApi {
     @ApiMethod(
             name = "getMenuItems",
             path = "getMenuItems",
-            httpMethod = HttpMethod.POST
+            httpMethod = HttpMethod.GET
     )
     public List<MenuItem> getMenuItems(){
     	Query<MenuItem> query = ofy().load().type(MenuItem.class);

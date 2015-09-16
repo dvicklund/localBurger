@@ -35,6 +35,9 @@ public class MenuItem {
     @Index
     private boolean glutenFree;
     
+    @Index
+    private double price;
+    
     private MenuItem(){}
     
     /**
@@ -50,6 +53,7 @@ public class MenuItem {
     	this.menuType = menuItemForm.getMenuType();
     	this.menuCourse = menuItemForm.getMenuCourse();
     	this.glutenFree = menuItemForm.isGlutenFree();
+    	this.price = menuItemForm.getPrice();
     }
 
 	/**
@@ -92,6 +96,12 @@ public class MenuItem {
 	 */
 	public boolean isGlutenFree() {
 		return glutenFree;
+	}
+	/**
+	 * @return the glutenFree
+	 */
+	public double getPrice() {
+		return price;
 	}
 	
 }

@@ -1,15 +1,15 @@
 'use strict';
 
 /**
- * The root oddjobApp module.
+ * The root localBurgerApp module.
  *
- * @type {oddjobApp|*|{}}
+ * @type {localBurgerApp|*|{}}
  */
 var localburgerApp = localburgerApp || {};
 
 /**
  * @ngdoc module
- * @name odd-jobControllers
+ * @name localburgerControllers
  *
  * @description
  * Angular module for controllers.
@@ -134,7 +134,7 @@ localburgerApp.controllers.controller('ReservationCtl',
          * The conference object being edited in the page.
          * @type {{}|*}
          */
-        $scope.conference = $scope.conference || {};
+        $scope.reservation = $scope.reservation || {};
 });
 
 /**
@@ -164,9 +164,11 @@ localburgerApp.controllers.controller('EventsCtl',
 localburgerApp.controllers.controller('MenuCtl',
     function ($scope, $log, oauth2Provider, HTTP_ERRORS) {
 
+        $scope.setSelectedTab = function(){
+            $scope.selectedTab = "BRUNCH";
+        }
         
-        $scope.selectedTab = "BRUNCH";
-        
+        $scope.menuItems = [];
         
         $scope.getBrunch = function () {
             $scope.selectedTab = 'BRUNCH';
@@ -209,12 +211,37 @@ localburgerApp.controllers.controller('MenuCtl',
                 $scope.queryMealsAll();
             } 
         };
+
         /**
-         * Invokes the conference.queryConferences API.
+         * Invokes the localburger. API.
          */
         $scope.queryMealsAll = function () {
-            console.log("Executing");
-        }        
+            $scope.loading = true;
+            gapi.client.localburger.getMenuItems().
+                execute(function (resp) {
+                    $scope.$apply(function () {
+                        $scope.loading = false;
+                        if (resp.error) {
+                            // The request has failed.
+                            var errorMessage = resp.error.message || '';
+                            $scope.messages = 'Failed to query menuItems : ' + errorMessage;
+                            $scope.alertStatus = 'warning';
+                        } else {
+                            // The request has succeeded.
+                            $scope.submitted = false;
+                            $scope.messages = 'Query succeeded : ' + resp.items;
+                            $scope.alertStatus = 'success';
+                            $log.info($scope.messages);
+
+                            $scope.menuItems = [];
+                            angular.forEach(resp.items, function (menuItem) {
+                                $scope.menuItems.push(menuItem);
+                            });
+                        }
+                        $scope.submitted = true;
+                    });
+                });
+        	};
 });
 /**
  * @ngdoc controller

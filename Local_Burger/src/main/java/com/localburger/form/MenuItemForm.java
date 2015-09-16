@@ -20,6 +20,8 @@ public class MenuItemForm {
     
     private boolean glutenFree;
     
+    private double price;
+    
     private MenuItemForm() {}
 
     /**
@@ -27,12 +29,13 @@ public class MenuItemForm {
      * @param displayName A String for displaying the user on this system.
      * @param notificationEmail An e-mail address for getting notifications from this system.
      */
-    public MenuItemForm(String name, String description,MenuType menuType, MenuCourse menuCourse, boolean glutenFree) {
+    public MenuItemForm(String name, String description,MenuType menuType, MenuCourse menuCourse, boolean glutenFree, double price) {
         this.name = name;
         this.description = description;
         this.menuType = menuType;
         this.menuCourse = menuCourse;
         this.glutenFree = glutenFree;
+        this.price = price;
     }
     
     
@@ -69,7 +72,12 @@ public class MenuItemForm {
 	public boolean isGlutenFree() {
 		return glutenFree;
 	}
-
+	/**
+	 * @return the glutenFree
+	 */
+	public double getPrice() {
+		return price;
+	}
 
 
 	public static enum MenuType {
