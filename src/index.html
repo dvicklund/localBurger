@@ -1,38 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
   <head>
-    <title>Local Burger | Welcome</title>
-    <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
     <script src="components/jquery/dist/jquery.js"></script>
     <script src="js/main.js"></script>
-  </head>
-  <body>
+    <title>Local Burger | Welcome</title>
+
+    <!-- Leave the header in place and change content -->
     <header id="mainHeader">
-      <a href="index.html">
-      <img src="images/cropped-local360-header.png" width="100%" alt="Local Burger"/></a>
+      <img id="logo" src="images/cropped-local360-header.png" width="100%" alt="Local Burger"/><!--</a>-->
 
       <nav id="mainMenu">
         <ul>
-          <li><a href="partials/reservations.html">Reservations</a></li>
-          <li><a href="partials/menus.html">Menus</a></li>
-          <li><a href="partials/events.html">Events</a></li>
-          <li><a href="partials/contact.html">Contact</a></li>
+          <!-- Leave <a> to use the css styling -->
+          <li id="reserveNav"><a>Reservations</a></li>
+          <li id="menuNav"><a>Menus</a></li>
+          <li id="eventNav"><a>Events</a></li>
+          <li id="contactNav"><a>Contact</a></li>
         </ul>
       </nav>
     </header>
+  </head>
+  <body>
+      <div class="container-fluid">
+        <div id="landingContent">
+          <h1>Welcome Friends,</h1>
+          <p>If you've discovered this page in search of great burgers, know you're in good company. This is a place for bacon-laced patties, hunks of bleu cheese, and get-your-hands-juicy burgers. So juicy your hands will be a hot mess, but who the heck cares 'cause it's a burger and that's how it should be. Don't be ashamed friend, you're just doing it right.</p>
+          <p>Now, if you're here searching for vegetarian options, you'll find we have those, too. Some of our best friends are herbivores, so we get it: vegetarians like good burgers too.</p>
+          <p>We all want to feel good about what we eat, but we want you to feel great about what you're eating. That's why at Local Burger we are committed to providing quality food and beverages from local farmers that care about their product. We've got terrific burgers, sandwiches, salads and sides all made with love, in-house, from locally-sourced ingredients.</p>
+          <p>And don't think we've forgotten about you, dear beer lover! In addition to our tasty wine and cocktails, we have 24 tap handles and are all about pouring you that perfect cold one.</p>
+          <p>Good burgers, beer, and cocktails, locally sourced from people who care. If you love those things too, then come by and make some burger buddies.</p>
+          <p>&mdash;Local Burger</p>
+        </div>
+        <!-- Paste all pages into #xxContent divs so there's only one page load' -->
+        <div id="contactContent" hidden>
+          <h1 style="text-align:center;">Local Burger is located at 10134 Main Street in Downtown Bellevue</h1>
 
-    <main>
-      <h1>Welcome Friends,</h1>
-      <p>If you've discovered this page in search of great burgers, know you're in good company. This is a place for bacon-laced patties, hunks of bleu cheese, and get-your-hands-juicy burgers. So juicy your hands will be a hot mess, but who the heck cares 'cause it's a burger and that's how it should be. Don't be ashamed friend, you're just doing it right.</p>
-      <p>Now, if you're here searching for vegetarian options, you'll find we have those, too. Some of our best friends are herbivores, so we get it: vegetarians like good burgers too.</p>
-      <p>We all want to feel good about what we eat, but we want you to feel great about what you're eating. That's why at Local Burger we are committed to providing quality food and beverages from local farmers that care about their product. We've got terrific burgers, sandwiches, salads and sides all made with love, in-house, from locally-sourced ingredients.</p>
-      <p>And don't think we've forgotten about you, dear beer lover! In addition to our tasty wine and cocktails, we have 24 tap handles and are all about pouring you that perfect cold one.</p>
-      <p>Good burgers, beer, and cocktails, locally sourced from people who care. If you love those things too, then come by and make some burger buddies.</p>
-      <p>&mdash;Local Burger</p>
-    </main>
+          <iframe width="93.675%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2689.809441522542!2d-122.20462800000001!3d47.6103949!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54906c80a90027dd%3A0xefea5186cfc7735d!2s10134+Main+St%2C+Bellevue%2C+WA+98004!5e0!3m2!1sen!2sus!4v1406062315383" style="background-color:#fff; padding:10px;border: 1px solid #D6D4C8;"></iframe>
+
+          <p>For Reservations, <a href="./reservations.html">click here</a>.</p>
+          <p>All other inquiries, please call us at (425) 454-8559 or email us at <a href="mailto:info@localburger.org">info@localburger.org</a>.</p>
+          <p>Thank you for your business!</a>
+        </div>
+        <div id="menuContent" hidden>
+          <p>So, you've found the good stuff! Save yourself some indecision, we've got all the menus you need right here...</p>
+          <p>Local Burger is open from <strong>11am</strong> to <strong>close</strong> on the daily.<br/><br />
+          Looking to get happy? Be here from <strong>3pm</strong> to <strong>6pm</strong>.<br/><br />
+          Brunch is on the weekends from <strong>9am</strong> to <strong>3pm</strong>.</p>
+          <p>Problems with uncertainty?  Make a reservation <a href="http://www.opentable.com/local-burger-reservations-bellevue">here</a>!</p>
+          <p>We believe in real food, grown and harvested by the good folks in our community who take care of their land for future generations. We believe in whole, natural flavor. We believe in sustainability, not as an abstract concept, but as a conscious daily choice. We believe in hands, products made by hand, and the goodwill fostered by such hand-in-hand relationships.</p>
+          <p>Thank you for your business.</p>
+
+          <a href="../pdf/dayMenu.pdf" title="Daytime Menu">Daytime Menu</a>
+          <a href="../pdf/happyHourMenu.pdf" title="Happy Hour Menu">Happy Hour</a>
+          <a href="../pdf/brunchMenu.pdf" title="Brunch Menu">Brunch</a>
+          <a href="../pdf/cateringMenu.pdf" title="Catering Menu">Catering</a>
+
+          <img src="images/onion-rings.jpg" alt="Onion Rings"/>
+          <img src="images/deviled-eggs.jpg" alt="Deviled Eggs"/>
+          <img src="images/cocktails.jpg" alt="Cocktails"/>
+          <img src="images/dessert.jpg" alt="Dessert"/>
+        </div>
+        <div id="reservationContent" hidden>
+          <h1>Reservations</h1>
+
+          <h3>We take reservations daily, save yourself a spot!</h3>
+
+          <img src="images/reservations.jpg" alt="Reserve A Table"/>
+
+          <p>For parties of 10 or more, please give us a call at (425) 454-8559 or email us at <a href="mailto:info@localburger.org">info@localburger.org</a>. Thank you.</p>
+
+          <script type="text/javascript" src="http://www.opentable.com/frontdoor/default.aspx?rid=147898&restref=147898&hover=1"></script>
+        </div>
+        <div id="eventContent" hidden>
+          <article>
+          </article>
+        </div>
+      </div>
   </body>
-  <script>
-    //$("h1").text("blah");
-  </script>
+
+  <footer class="navbar-fixed-bottom">
+    <ul>
+      <li><a id="emailInfo" href="mailto:info@localburger.org">info@localburger.org</a></li>
+    </ul>
+  </footer>
 </html>
