@@ -1,0 +1,43 @@
+<h1 style="text-align:center;">Check out our events</h1>
+<div ng-controller="MenuCtl">
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="messages" class="alert alert-{{alertStatus}}" ng-show="messages">
+                <span ng-bind="messages"></span>
+                <i class="dismiss-messages pull-right glyphicon glyphicon-remove" ng-click="messages = ''"
+                   ng-show="messages"></i>
+            </div>
+            <img class="spinner" src="/img/ajax-loader.gif" ng-show="loading"/>
+        </div>
+    </div>
+
+
+ 
+      <p>So, you've found the good stuff! Save yourself some indecision, we've got all the menus you need right here...</p>
+      <p>Local Burger is open from <strong>11am</strong> to <strong>close</strong> on the daily.<br/><br />
+      Looking to get happy? Be here from <strong>3pm</strong> to <strong>6pm</strong>.<br/><br />
+      Brunch is on the weekends from <strong>9am</strong> to <strong>3pm</strong>.</p>
+      <p>Problems with uncertainty?  Make a reservation <a href="http://www.opentable.com/local-burger-reservations-bellevue">here</a>!</p>
+      <p>We believe in real food, grown and harvested by the good folks in our community who take care of their land for future generations. We believe in whole, natural flavor. We believe in sustainability, not as an abstract concept, but as a conscious daily choice. We believe in hands, products made by hand, and the goodwill fostered by such hand-in-hand relationships.</p>
+      <p>Thank you for your business.</p>
+
+	<tabset id="show-menus-tab" justified="true">
+	<tab select="getBrunch()" heading="Brunch"></tab>
+	<tab select="getHappyHour()" heading="Happy Hour"></tab>
+	<tab select="getDinner()" heading="Dinner"></tab>
+	<tab select="getCatering()" heading="Catering"></tab>
+	</tabset>
+	<div ng-show="selectedTab == 'BRUNCH'">
+		<h1>Brunch</h1>
+	</div>
+	<div ng-show="selectedTab == 'HAPPYHOUR'">
+		<h1>Happy Hour</h1>
+	</div>
+	<div ng-show="selectedTab == 'DINNER'">
+		<h1>Dinner</h1>
+	</div>
+	<div ng-show="selectedTab == 'CATERING'">
+		<h1>Catering</h1>
+	</div>
+</div> 
+	
