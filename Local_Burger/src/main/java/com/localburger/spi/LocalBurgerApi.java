@@ -4,6 +4,7 @@ import static com.localburger.service.OfyService.factory;
 import static com.localburger.service.OfyService.ofy;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,7 +37,7 @@ import com.localburger.form.ProfileForm;
 import com.localburger.form.ProfileForm.TeeShirtSize;
 
 /**
- * Defines conference APIs.
+ * Defines localburger APIs.
  */
 @Api(name = "localburger", version = "v1", scopes = { Constants.EMAIL_SCOPE }, clientIds = {
         Constants.WEB_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID }, description = "API for the local-burger  Backend application.")
@@ -134,7 +135,29 @@ public class LocalBurgerApi {
          httpMethod = HttpMethod.POST
  )
  public List<Event> getEvents(){
- 	Query<Event> query = ofy().load().type(Event.class);
- 	return query.list();
+	 Date date = new Date();
+	 Query<Event> query = ofy().load().type(Event.class).order("date");
+	 return query.list();
+ } 
+ /**
+  * Queries the datastore for events.
+  *
+  * @return A list of Event objects
+  * @throws UnauthorizedException when the user is not signed in.
+  */
+ @ApiMethod(
+         name = "getUpcomingEvents",
+         path = "getUpcomingEvents",
+         httpMethod = HttpMethod.POST
+ )
+ public List<Event> getUpcomingEvents(){
+	 Date date = new Date();
+	 System.out.println(date.toString());
+	 Long time = new Date().getTime();
+	 Date midnightDate = new Date(time - time % (60 * 60 * 60 * 1000));
+	 System.out.println(midnightDate);
+
+	 Query<Event> query = ofy().load().type(Event.class).filter("date >=", date).order("date");
+	 return query.list();
  }    
 }

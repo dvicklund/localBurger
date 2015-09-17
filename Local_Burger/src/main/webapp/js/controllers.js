@@ -152,6 +152,41 @@ localburgerApp.controllers.controller('EventsCtl',
          * @type {{}|*}
          */
         $scope.events = $scope.events || {};
+        
+        /**
+         * Invokes the localburger. API.
+         */
+        $scope.queryEventsAll = function () {
+            $scope.loading = true;
+            gapi.client.localburger.getUpcomingEvents().
+                execute(function (resp) {
+                    $scope.$apply(function () {
+                        $scope.loading = false;
+                        if (resp.error) {
+                            // The request has failed.
+                            var errorMessage = resp.error.message || '';
+                            $scope.messages = 'Failed to query menuItems : ' + errorMessage;
+                            $scope.alertStatus = 'warning';
+                        } else {
+                            // The request has succeeded.
+                            $scope.submitted = false;
+                            $scope.messages = 'Query succeeded : ' + 
+                            resp.items;
+                            $scope.alertStatus = 'success';
+                            $log.info($scope.messages);
+
+                            $scope.events = [];
+                            angular.forEach(resp.items, function (event) {
+                                $scope.events.push(event);
+                            });
+                        }
+                        $scope.submitted = true;
+                    });
+                });
+        	};
+        	angular.element(document).ready(function () {
+    	            $scope.queryEventsAll();
+    		});
 });
 
 /**
@@ -164,15 +199,14 @@ localburgerApp.controllers.controller('EventsCtl',
 localburgerApp.controllers.controller('MenuCtl',
     function ($scope, $log, oauth2Provider, HTTP_ERRORS) {
 
-        $scope.setSelectedTab = function(){
-            $scope.selectedTab = "BRUNCH";
-        }
+		
+        $scope.loading = false;
         
-        $scope.menuItems = [];
+        $scope.menuItems = {};
+        		
         
         $scope.getBrunch = function () {
             $scope.selectedTab = 'BRUNCH';
-            $scope.queryMeals();
         };
 
         /**
@@ -180,12 +214,10 @@ localburgerApp.controllers.controller('MenuCtl',
          */
         $scope.getHappyHour = function () {
             $scope.selectedTab = 'HAPPYHOUR';
-            $scope.queryMeals();
         };
         
         $scope.getDinner = function () {
             $scope.selectedTab = 'DINNER';
-            $scope.queryMeals();
         };
 
         /**
@@ -193,56 +225,29 @@ localburgerApp.controllers.controller('MenuCtl',
          */
         $scope.getCatering = function () {
             $scope.selectedTab = 'CATERING';
-            $scope.queryMeals();
-        };
-        /**
-         * Query the conferences depending on the tab currently selected.
-         *
-         */
-        $scope.queryMeals = function () {
-            $scope.submitted = false;
-            if ($scope.selectedTab == 'BRUNCH') {
-                $scope.queryMealsAll();
-            } else if ($scope.selectedTab == 'HAPPYHOUR') {
-                $scope.queryMealsAll();
-            }  else if ($scope.selectedTab == 'DINNER') {
-                $scope.queryMealsAll();
-            }  else if ($scope.selectedTab == 'CATERING') {
-                $scope.queryMealsAll();
-            } 
         };
 
-        /**
-         * Invokes the localburger. API.
-         */
-        $scope.queryMealsAll = function () {
-            $scope.loading = true;
-            gapi.client.localburger.getMenuItems().
-                execute(function (resp) {
-                    $scope.$apply(function () {
-                        $scope.loading = false;
-                        if (resp.error) {
-                            // The request has failed.
-                            var errorMessage = resp.error.message || '';
-                            $scope.messages = 'Failed to query menuItems : ' + errorMessage;
-                            $scope.alertStatus = 'warning';
-                        } else {
-                            // The request has succeeded.
-                            $scope.submitted = false;
-                            $scope.messages = 'Query succeeded : ' + resp.items;
-                            $scope.alertStatus = 'success';
-                            $log.info($scope.messages);
-
-                            $scope.menuItems = [];
-                            angular.forEach(resp.items, function (menuItem) {
-                                $scope.menuItems.push(menuItem);
-                            });
-                        }
-                        $scope.submitted = true;
-                    });
-                });
-        	};
+        $scope.init = function(){
+        	$scope.loading = true;
+        	$scope.menuItems = [];
+        	gapi.client.localburger.getMenuItems().
+              	execute(function (resp) {
+              		$scope.$apply(function () {
+              			$scope.loading = false;
+              			if (resp.error) {
+              				// Failed to get a user profile.
+              			} else {
+              				$scope.menuItems = [];
+              				angular.forEach(resp.items, function (menuItem) {
+              					$scope.menuItems.push(menuItem);
+              				});
+              			}
+              		});
+              	});      
+        }
 });
+
+
 /**
  * @ngdoc controller
  * @name ContactCtl
@@ -257,7 +262,7 @@ localburgerApp.controllers.controller('ContactCtl',
          * The conference object being edited in the page.
          * @type {{}|*}
          */
-        $scope.conference = $scope.conference || {};
+        $scope.contact = $scope.contact || {};
 });
 /**
  * @ngdoc controller
@@ -346,6 +351,21 @@ localburgerApp.controllers.controller('RootCtrl', function ($scope, $location, o
 });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * @ngdoc controller
  * @name OAuth2LoginModalCtrl
@@ -413,4 +433,357 @@ localburgerApp.controllers.controller('DatepickerCtrl', function ($scope) {
     $scope.format = $scope.formats[0];
 });
 
+
+
+
+
+
+
+
+
+/**
+ * @ngdoc controller
+ * @name AdminAddMenuItemCtl
+ *
+ * @description
+ * A controller used for the Create menu items page.
+ */
+localburgerApp.controllers.controller('AdminAddMenuItemCtl',
+    function ($scope, $log, oauth2Provider, HTTP_ERRORS) {
+
+        /**
+         * The conference object being edited in the page.
+         * @type {{}|*}
+         */
+        $scope.menuItem = $scope.menuItem || {};
+
+        /**
+         * Holds the default values for the input menuTypes for menuType select.
+         * @type {string[]}
+         */
+        $scope.menuTypes = [
+                            'BRUNCH',
+                            'DINNER',
+                            'CATERING',
+                            'HAPPY_HOUR'
+        ];
+
+        /**
+         * Holds the default values for the input menuCourses for menuCourse select.
+         * @type {string[]}
+         */
+        $scope.menuCourses = [
+                          	'STARTERS',
+                        	'SIDES',
+                        	'SALADS',
+                        	'BURGERS',
+                        	'LOCAL_ADD_ONS',
+                        	'COCKTAILS',
+                        	'DESSERTS', 
+                        	'FOOD',
+                        	'DRINKS',
+                        	'LIBATIONS',
+                        	'MAINS',
+                        	'SANDWICHES_AND_WRAPS',
+                        	'PLATTERS'
+        ];
+
+
+        /**
+         * Tests if $scope.menuItem is valid.
+         * @param menuItemForm the form object from the Admin_AddMenu.html page.
+         * @returns {boolean|*} true if valid, false otherwise.
+         */
+        $scope.isValidMenu = function (menuItemForm) {
+            return !menuItemForm.$invalid
+        }
+
+        /**
+         * Invokes the conference.createConference API.
+         *
+         * @param menuItemForm the form object.
+         */
+        $scope.createMenuItem = function (menuItemForm) {
+            if (!$scope.isValidMenu(menuItemForm)) {
+                return;
+            }
+
+            $scope.loading = true;
+            gapi.client.localburger.createMenuItem($scope.menuItem).
+                execute(function (resp) {
+                    $scope.$apply(function () {
+                        $scope.loading = false;
+                        if (resp.error) {
+                            // The request has failed.
+                            var errorMessage = resp.error.message || '';
+                            $scope.messages = 'Failed to create a menu item : ' + errorMessage;
+                            $scope.alertStatus = 'warning';
+                            $log.error($scope.messages + ' MenuItem : ' + JSON.stringify($scope.menuItem));
+
+                            if (resp.code && resp.code == HTTP_ERRORS.UNAUTHORIZED) {
+                                oauth2Provider.showLoginModal();
+                                return;
+                            }
+                        } else {
+                            // The request has succeeded.
+                            $scope.messages = 'The menu item has been created : ' + resp.result.name;
+                            $scope.alertStatus = 'success';
+                            $scope.submitted = false;
+                            $scope.menuItem = {};
+                            $log.info($scope.messages + ' : ' + JSON.stringify(resp.result));
+                        }
+                    });
+                });
+        };
+    });
+
+
+/**
+ * @ngdoc controller
+ * @name AdminAddMenuItemCtl
+ *
+ * @description
+ * A controller used for the Create menu items page.
+ */
+localburgerApp.controllers.controller('AdminUpdateMenuItemCtl',
+    function ($scope, $log, oauth2Provider, HTTP_ERRORS) {
+
+        /**
+         * The conference object being edited in the page.
+         * @type {{}|*}
+         */
+        $scope.menuItem = $scope.menuItem || {};
+
+        /**
+         * Holds the default values for the input menuTypes for menuType select.
+         * @type {string[]}
+         */
+        $scope.menuTypes = [
+                            'BRUNCH',
+                            'DINNER',
+                            'CATERING',
+                            'HAPPY_HOUR'
+        ];
+
+        /**
+         * Holds the default values for the input menuCourses for menuCourse select.
+         * @type {string[]}
+         */
+        $scope.menuCourses = [
+                          	'STARTERS',
+                        	'SIDES',
+                        	'SALADS',
+                        	'BURGERS',
+                        	'LOCAL_ADD_ONS',
+                        	'COCKTAILS',
+                        	'DESSERTS', 
+                        	'FOOD',
+                        	'DRINKS',
+                        	'LIBATIONS',
+                        	'MAINS',
+                        	'SANDWICHES_AND_WRAPS',
+                        	'PLATTERS'
+        ];
+
+
+        /**
+         * Tests if $scope.menuItem is valid.
+         * @param menuItemForm the form object from the Admin_AddMenu.html page.
+         * @returns {boolean|*} true if valid, false otherwise.
+         */
+        $scope.isValidMenu = function (menuItemForm) {
+            return !menuItemForm.$invalid
+        }
+
+        /**
+         * Invokes the conference.createConference API.
+         *
+         * @param menuItemForm the form object.
+         */
+        $scope.createMenuItem = function (menuItemForm) {
+            if (!$scope.isValidMenu(menuItemForm)) {
+                return;
+            }
+
+            $scope.loading = true;
+            gapi.client.localburger.createMenuItem($scope.menuItem).
+                execute(function (resp) {
+                    $scope.$apply(function () {
+                        $scope.loading = false;
+                        if (resp.error) {
+                            // The request has failed.
+                            var errorMessage = resp.error.message || '';
+                            $scope.messages = 'Failed to create a menu item : ' + errorMessage;
+                            $scope.alertStatus = 'warning';
+                            $log.error($scope.messages + ' MenuItem : ' + JSON.stringify($scope.menuItem));
+
+                            if (resp.code && resp.code == HTTP_ERRORS.UNAUTHORIZED) {
+                                oauth2Provider.showLoginModal();
+                                return;
+                            }
+                        } else {
+                            // The request has succeeded.
+                            $scope.messages = 'The menu item has been created : ' + resp.result.name;
+                            $scope.alertStatus = 'success';
+                            $scope.submitted = false;
+                            $scope.menuItem = {};
+                            $log.info($scope.messages + ' : ' + JSON.stringify(resp.result));
+                        }
+                    });
+                });
+        };
+    });
+/**
+ * @ngdoc controller
+ * @name AdminAddMenuItemCtl
+ *
+ * @description
+ * A controller used for the Create menu items page.
+ */
+localburgerApp.controllers.controller('AdminAddEventCtl',
+    function ($scope, $log, oauth2Provider, HTTP_ERRORS) {
+
+
+    /**
+     * The conference object being edited in the page.
+     * @type {{}|*}
+     */
+    $scope.event = $scope.event || {};
+
+
+    /**
+     * Tests if the event.date is valid.
+     * @returns {boolean} true if the dates are valid, false otherwise.
+     */
+    $scope.isValidDate = function () {
+    	var date = new Date();
+        if (!$scope.event.date) {
+            return false;
+        }
+        return date.setHours(0,0,0,0) <= $scope.event.date;
+    }
+    /**
+     * Tests if $scope.menuItem is valid.
+     * @param menuItemForm the form object from the Admin_AddMenu.html page.
+     * @returns {boolean|*} true if valid, false otherwise.
+     */
+    $scope.isValidEvent = function (eventForm) {
+        return !eventForm.$invalid && isValidDate();
+    }
+
+    /**
+     * Invokes the localburger.createEvent API.
+     *
+     * @param menuItemForm the form object.
+     */
+    $scope.createEvent = function (eventForm) {
+        if (!$scope.isValidEvent(eventForm)) {
+            return;
+        }
+
+        $scope.loading = true;
+        gapi.client.localburger.createEvent($scope.event).
+            execute(function (resp) {
+                $scope.$apply(function () {
+                    $scope.loading = false;
+                    if (resp.error) {
+                        // The request has failed.
+                        var errorMessage = resp.error.message || '';
+                        $scope.messages = 'Failed to create a menu item : ' + errorMessage;
+                        $scope.alertStatus = 'warning';
+                        $log.error($scope.messages + ' Event : ' + JSON.stringify($scope.event));
+
+                        if (resp.code && resp.code == HTTP_ERRORS.UNAUTHORIZED) {
+                            oauth2Provider.showLoginModal();
+                            return;
+                        }
+                    } else {
+                        // The request has succeeded.
+                        $scope.messages = 'The menu item has been created : ' + resp.result.name;
+                        $scope.alertStatus = 'success';
+                        $scope.submitted = false;
+                        $scope.event = {};
+                        $log.info($scope.messages + ' : ' + JSON.stringify(resp.result));
+                    }
+                });
+            });
+    };
+    });
+
+
+/**
+ * @ngdoc controller
+ * @name AdminAddMenuItemCtl
+ *
+ * @description
+ * A controller used for the Create menu items page.
+ */
+localburgerApp.controllers.controller('AdminUpdateEventCtl',
+    function ($scope, $log, oauth2Provider, HTTP_ERRORS) {
+
+        /**
+         * The conference object being edited in the page.
+         * @type {{}|*}
+         */
+        $scope.event = $scope.event || {};
+
+
+        /**
+         * Tests if the event.date is valid.
+         * @returns {boolean} true if the dates are valid, false otherwise.
+         */
+        $scope.isValidDate = function () {
+        	var date = new Date();
+            if (!$scope.event.date) {
+                return true;
+            }
+            return date.setHours(0,0,0,0) <= $scope.job.completionDate;
+        }
+        /**
+         * Tests if $scope.menuItem is valid.
+         * @param menuItemForm the form object from the Admin_AddMenu.html page.
+         * @returns {boolean|*} true if valid, false otherwise.
+         */
+        $scope.isValidEvent = function (eventForm) {
+            return !eventForm.$invalid && isValidDate();
+        }
+
+        /**
+         * Invokes the conference.createConference API.
+         *
+         * @param menuItemForm the form object.
+         */
+        $scope.createEvent = function (eventForm) {
+            if (!$scope.isValidEvent(eventForm)) {
+                return;
+            }
+
+            $scope.loading = true;
+            gapi.client.localburger.createEvent($scope.event).
+                execute(function (resp) {
+                    $scope.$apply(function () {
+                        $scope.loading = false;
+                        if (resp.error) {
+                            // The request has failed.
+                            var errorMessage = resp.error.message || '';
+                            $scope.messages = 'Failed to create a menu item : ' + errorMessage;
+                            $scope.alertStatus = 'warning';
+                            $log.error($scope.messages + ' Event : ' + JSON.stringify($scope.event));
+
+                            if (resp.code && resp.code == HTTP_ERRORS.UNAUTHORIZED) {
+                                oauth2Provider.showLoginModal();
+                                return;
+                            }
+                        } else {
+                            // The request has succeeded.
+                            $scope.messages = 'The menu item has been created : ' + resp.result.name;
+                            $scope.alertStatus = 'success';
+                            $scope.submitted = false;
+                            $scope.event = {};
+                            $log.info($scope.messages + ' : ' + JSON.stringify(resp.result));
+                        }
+                    });
+                });
+        };
+    });
    

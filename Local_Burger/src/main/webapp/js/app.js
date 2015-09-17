@@ -32,6 +32,22 @@ var app = angular.module('localburgerApp',
                     templateUrl: '/partials/contact.html',
                     controller: 'ContactCtl'
                 }).
+                when('/admin/menu', {
+                    templateUrl: '/partials/Admin_UpdateMenu.html',
+                    controller: 'AdminUpdateItemCtl'
+                }).                
+                when('/admin/menu/add', {
+                    templateUrl: '/partials/Admin_AddMenu.html',
+                    controller: 'AdminAddMenuItemCtl'
+                }).
+                when('/admin/event', {
+                    templateUrl: '/partials/Admin_UpdateEvent.html',
+                    controller: 'AdminUpdateEventCtl'
+                }).                  
+                when('/admin/event/add', {
+                    templateUrl: '/partials/Admin_AddEvent.html',
+                    controller: 'AdminAddEventCtl'
+                }).                
                 when('/', {
                     templateUrl: '/partials/home.html'
                 }).
@@ -91,9 +107,11 @@ app.factory('oauth2Provider', function ($modal) {
         signedIn: false
     };
 
+
+    
     /**
      * Calls the OAuth2 authentication method.
-     */
+     */    
     oauth2Provider.signIn = function (callback) {
         gapi.auth.signIn({
             'clientid': oauth2Provider.CLIENT_ID,
@@ -126,7 +144,7 @@ app.factory('oauth2Provider', function ($modal) {
             controller: 'OAuth2LoginModalCtrl'
         });
         return modalInstance;
-    };
-
+    };   
+    
     return oauth2Provider;
 });

@@ -1,0 +1,67 @@
+<div ng-controller="AdminAddEventCtl">
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="messages" class="alert alert-{{alertStatus}}" ng-show="messages">
+                <span ng-bind="messages"></span>
+                <i class="dismiss-messages pull-right glyphicon glyphicon-remove" ng-click="messages = ''"
+                   ng-show="messages"></i>
+            </div>
+            <img class="spinner" src="/images/ajax-loader.gif" ng-show="loading"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <h3>Add a new Event</h3>
+
+            <form name="eventForm" novalidate role="form">
+                <div class="form-group">
+                    <label for="name">Name <span class="required">*</span></label>
+                    <span class="label label-danger"
+                        ng-show="eventForm.name.$error.required">Required!</span>
+                    <input id="name" type="text" name="name" ng-model="event.name" class="form-control"
+                           ng-required="true"/>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description <span class="required">*</span></label>
+                    <span class="label label-danger"
+                        ng-show="eventForm.description.$error.required">Required!</span>
+                    <input id="description" type="text" name="description" ng-model="event.description" class="form-control" ng-required="true"/>
+                </div>
+                <div class="form-group" ng-controller="DatepickerCtrl">
+                    <label for="date">Date</label>
+                    <span class="label label-danger"
+                        ng-show="!isValidDate()">Date must be later or equal to today</span>
+                    <p class="input-group">
+                        <input id="date" type="text" class="form-control" datepicker-popup="{{format}}"
+                               ng-model="event.date" is-open="opened"
+                               datepicker-options="dateOptions"
+                               close-text="Close"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" ng-click="open($event)"><i
+                                class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                    </span>
+                    </p>
+                </div> 
+                <div class="form-group">
+                    <label for="startHour">Start Time in 24 HR format <span class="required">*</span></label>
+                    <span class="label label-danger"
+                        ng-show="eventForm.startHour.$error.required">Required!</span>
+                    <input id="startHour" type="number" name="startHour" ng-model="event.startHour" class="form-control"
+                           ng-required="true"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="durationHour">Duration in Hours <span class="required">*</span></label>
+                    <span class="label label-danger"
+                        ng-show="eventForm.durationHour.$error.required">Required!</span>
+                    <input id="durationHour" type="number" name="durationHour" ng-model="event.durationHour" class="form-control"
+                           ng-required="true"/>
+                </div>
+                <button ng-click="createEvent(eventForm)" class="btn btn-primary"
+                        ng-disabled="!isValidEvent(eventForm) || loading">Create
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

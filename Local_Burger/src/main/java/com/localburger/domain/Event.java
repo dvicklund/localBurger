@@ -1,6 +1,7 @@
 package com.localburger.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
@@ -9,9 +10,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.localburger.form.EventForm;
-import com.localburger.form.MenuItemForm;
-import com.localburger.form.MenuItemForm.MenuCourse;
-import com.localburger.form.MenuItemForm.MenuType;
+
 
 
 // TODO indicate that this class is an Entity
@@ -21,6 +20,14 @@ public class Event {
     
     @Id 
     private long id;
+    
+    @Index 
+    private Date date;
+        
+    @Index
+    private double startHour;
+    
+    private double durationHour;
     
     @Index
     private String name;
@@ -40,6 +47,10 @@ public class Event {
     	this.id = id;
     	this.name = eventForm.getName();
     	this.description = eventForm.getDescription();
+    	this.date = eventForm.getDate();
+    	this.durationHour = eventForm.getDurationHour();
+    	this.startHour = eventForm.getDurationHour();
+    			
     }
 
 	/**
@@ -62,5 +73,13 @@ public class Event {
 	public String getDescription() {
 		return description;
 	}
-
+	public Date getDate(){
+		return date;
+	}
+	public double getStartHour(){
+		return startHour;
+	}
+	public double getDurationHour(){
+		return durationHour;
+	}
 }
