@@ -288,7 +288,7 @@ localburgerApp.controllers.controller('RootCtrl', function ($scope, $location, o
     /**
      * Returns the OAuth2 signedIn state.
      *
-     * @returns {oauth2Provider.signedIn|*} true if siendIn, false otherwise.
+     * @returns {oauth2Provider.signedIn|*} true if signedin, false otherwise.
      */
     $scope.getSignedInState = function () {
         return oauth2Provider.signedIn;
@@ -371,7 +371,7 @@ localburgerApp.controllers.controller('RootCtrl', function ($scope, $location, o
  * @name OAuth2LoginModalCtrl
  *
  * @description
- * The controller for the modal dialog that is shown when an user needs to login to achive some functions.
+ * The controller for the modal dialog that is shown when an user needs to login to archive some functions.
  *
  */
 localburgerApp.controllers.controller('OAuth2LoginModalCtrl',
@@ -384,7 +384,6 @@ localburgerApp.controllers.controller('OAuth2LoginModalCtrl',
                         $scope.$root.alertStatus = 'success';
                         $scope.$root.rootMessages = 'Logged in with ' + resp.email;
                     });
-
                     $modalInstance.close();
                 });
             });
@@ -656,10 +655,13 @@ localburgerApp.controllers.controller('AdminAddEventCtl',
      * @returns {boolean} true if the dates are valid, false otherwise.
      */
     $scope.isValidDate = function () {
+    	console.log("\nisValidDate()");
     	var date = new Date();
         if (!$scope.event.date) {
+        	console.log('Why am I here');
             return false;
         }
+    	console.log('date.setHours(0,0,0,0) <= $scope.event.date: ' + date.setHours(0,0,0,0) <= $scope.event.date);
         return date.setHours(0,0,0,0) <= $scope.event.date;
     }
     /**
@@ -668,7 +670,10 @@ localburgerApp.controllers.controller('AdminAddEventCtl',
      * @returns {boolean|*} true if valid, false otherwise.
      */
     $scope.isValidEvent = function (eventForm) {
-        return !eventForm.$invalid && isValidDate();
+    	console.log("\nisValidEvent()");
+    	console.log('!eventForm.$invalid: ' + !eventForm.$invalid);
+    	console.log('isValidDate(): ' + $scope.isValidDate());
+        return !eventForm.$invalid && $scope.isValidDate();
     }
 
     /**
@@ -720,70 +725,93 @@ localburgerApp.controllers.controller('AdminAddEventCtl',
  */
 localburgerApp.controllers.controller('AdminUpdateEventCtl',
     function ($scope, $log, oauth2Provider, HTTP_ERRORS) {
+	
+	    $scope.submitted = false;
+	    $scope.loading = false;
+	
+	    /**
+	     * The initial event retrieved from the server to know the dirty state.
+	     * @type {{}}
+	     */
+	    $scope.initialEvents = [];        
 
-        /**
-         * The conference object being edited in the page.
-         * @type {{}|*}
-         */
-        $scope.event = $scope.event || {};
 
-
-        /**
-         * Tests if the event.date is valid.
-         * @returns {boolean} true if the dates are valid, false otherwise.
-         */
-        $scope.isValidDate = function () {
-        	var date = new Date();
-            if (!$scope.event.date) {
-                return true;
-            }
-            return date.setHours(0,0,0,0) <= $scope.job.completionDate;
-        }
-        /**
-         * Tests if $scope.menuItem is valid.
-         * @param menuItemForm the form object from the Admin_AddMenu.html page.
-         * @returns {boolean|*} true if valid, false otherwise.
-         */
-        $scope.isValidEvent = function (eventForm) {
-            return !eventForm.$invalid && isValidDate();
-        }
-
-        /**
-         * Invokes the conference.createConference API.
-         *
-         * @param menuItemForm the form object.
-         */
-        $scope.createEvent = function (eventForm) {
-            if (!$scope.isValidEvent(eventForm)) {
-                return;
-            }
-
-            $scope.loading = true;
-            gapi.client.localburger.createEvent($scope.event).
-                execute(function (resp) {
-                    $scope.$apply(function () {
-                        $scope.loading = false;
-                        if (resp.error) {
-                            // The request has failed.
-                            var errorMessage = resp.error.message || '';
-                            $scope.messages = 'Failed to create a menu item : ' + errorMessage;
-                            $scope.alertStatus = 'warning';
-                            $log.error($scope.messages + ' Event : ' + JSON.stringify($scope.event));
-
-                            if (resp.code && resp.code == HTTP_ERRORS.UNAUTHORIZED) {
-                                oauth2Provider.showLoginModal();
-                                return;
+	    $scope.init = function () {
+	    	var retrieveEventCallback = function () {
+	    		$scope.events = [];
+	    		$scope.loading = true;
+	    		gapi.client.localburger.getEvents().
+	    			execute(function (resp) {
+	    				$scope.$apply(function () {
+	    					$scope.loading = false;
+	                            if (resp.error) {
+	                            	console.log("ERROR");
+	                                // Failed to get the events.
+	                            } else {
+	                            	console.log("resp.items: " + resp.items);
+	                                angular.forEach(resp.items, function (event) {
+	                                	console.log(event.name);
+	                                    $scope.events.push(angular.copy(event));
+	                                });
+	                                $scope.initialEvents = resp.items.slice();
                             }
-                        } else {
-                            // The request has succeeded.
-                            $scope.messages = 'The menu item has been created : ' + resp.result.name;
-                            $scope.alertStatus = 'success';
-                            $scope.submitted = false;
-                            $scope.event = {};
-                            $log.info($scope.messages + ' : ' + JSON.stringify(resp.result));
-                        }
-                    });
-                });
-        };
+	                        });
+	                    }
+	                );
+	            };
+	            if (!oauth2Provider.signedIn) {
+	                var modalInstance = oauth2Provider.showLoginModal();
+	                modalInstance.result.then(retrieveEventCallback);
+	            } else {
+	            	retrieveEventCallback();
+	            }
+	        };
+	        $scope.deleteEvent = function(event, index){
+	        	console.log(index);
+
+	        	$scope.loading = true;
+	        	gapi.client.localburger.deleteEvent(event).
+	        		execute(function(resp){
+	    				$scope.$apply(function () {
+		    	        	$scope.loading = false;	        			
+		    	        	if(resp.error){
+		    	        		$scope.alertStatus = "warning";
+		    	        		$scope.message = resp.message;
+		        			}
+		        			else{
+		        				/**
+		        				 * Update both initialEvents and events
+		        				 */
+		        				$scope.initialEvents.splice(index,1);
+		        				$scope.events.splice(index,1);
+		        				$scope.alertStatus = "success";
+		        				$scope.message = resp.message;
+		        			}
+	    				});
+	        		})
+	        };
+	        $scope.updateEvent = function(event, index){
+	        	console.log(event);
+	        	$scope.loading = true;
+	        	gapi.client.localburger.updateEvent(event).
+	        		execute(function(resp){
+	        			$scope.$apply(function(){
+	        				$scope.loading = false;
+	        				if(resp.error){
+	        					$scope.alertStatus = "warning";
+	        					$scope.message = "Failed to update";
+	        				}
+	        				else{
+	        					/**
+	        					 * Updating initialEvents and events
+	        					 */
+	        					$scope.initialEvents[index] = resp.result;
+	        					$scope.events[index] = resp.result;
+	        					$scope.alertStatus = "success";
+	        					$scope.message = "Updated successfully";
+	        				}
+	        			});
+	        		})
+	        };
     });
    

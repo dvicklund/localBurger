@@ -159,5 +159,61 @@ public class LocalBurgerApi {
 
 	 Query<Event> query = ofy().load().type(Event.class).filter("date >=", date).order("date");
 	 return query.list();
- }    
+}   
+ 
+
+public static class WrappedResult{
+	private final boolean isCreated;
+	private final String message;
+	public WrappedResult(boolean isCreated, String message) {
+		this.isCreated = isCreated;
+		this.message = message;
+	}
+	public boolean isCreated(){
+		return isCreated;
+	}
+	public String getMessage(){
+		return message;
+	}
+}
+
+
+@ApiMethod(
+		 name = "deleteEvent",
+		 path = "deleteEvent",
+		 httpMethod = HttpMethod.POST
+		 )
+public WrappedResult deleteEvent(User user, Event e)
+		throws UnauthorizedException {
+   if (user == null) {
+       throw new UnauthorizedException("Authorization required");
+   }	
+	long eventId = e.getId();
+	System.out.println("\n\n" + e.getName() + "\n\n");
+	if(e != null){
+		ofy().delete().type(Event.class).id(e.getId()).now();
+		return new WrappedResult(true, "SUCCESS: Event deleted with id: " + eventId);
+	}
+	else{
+		return new WrappedResult(false, "FAILED: Event not deleted with id: " + eventId);
+	}
+}
+
+
+@ApiMethod(
+		name = "updateEvent",
+		path = "updateEvent",
+		httpMethod = HttpMethod.POST
+		)
+public Event updateEvent(User user, Event e) throws UnauthorizedException {
+	if(user == null){
+		throw new UnauthorizedException("Authorization Required");
+	}
+	Event eventUpdating = ofy().load().type(Event.class).id(e.getId()).now();
+	if(eventUpdating != null){
+		eventUpdating.updateEvent(e);
+		ofy().save().entity(eventUpdating).now();
+	}
+	return eventUpdating;
+}
 }

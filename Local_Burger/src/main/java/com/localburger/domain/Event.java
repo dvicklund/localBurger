@@ -82,4 +82,13 @@ public class Event {
 	public double getDurationHour(){
 		return durationHour;
 	}
+
+	public void updateEvent(Event oldEvent) {
+    	this.name = oldEvent.getName();
+    	this.description = oldEvent.getDescription();
+    	this.date = oldEvent.getDate();
+    	this.durationHour = oldEvent.getDurationHour();
+    	this.startHour = oldEvent.getDurationHour();
+		
+	}
 }

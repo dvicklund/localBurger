@@ -10,9 +10,8 @@
         </div>
     </div>
     <div ng-repeat="event in events">
-    
         <h2>{{event.name}}</h2>
-    	<p>On {{event.date | date: 'MMMM d yyyy'}} from {{event.startHour}} to {{event.startHour + event.durationHour}}</p>
+    	<p>On {{event.date | date: 'MMMM d, yyyy'}} from {{event.startHour}} to {{event.startHour + event.durationHour}}</p>
     	<p>{{event.description}}</p>
     </div>
 </div>
