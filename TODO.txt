@@ -1,10 +1,23 @@
 To do:
 
+See local360.org for design example
 - Enhance structural HTML
+- Well scaling navigation menu
 - Pick basic layout and design
 - Flesh out stylesheet
+- Use pleasant colors
 //Done - Convert menus from PDF to HTML
-- Get more pictures
+- Get more pictures, put in a carousel
 - Add sponsors page or logos to splash page
 - Fill events page
-- Add external links -?
+- Add external links -?:
+
+- Modularizing repeated elements for the back-end editor
+~ JSON
+~ jQuery
+
+- Back-end manager program
+~ Ability to edit:
+- Drink list
+- Menu
+- Upcoming events
