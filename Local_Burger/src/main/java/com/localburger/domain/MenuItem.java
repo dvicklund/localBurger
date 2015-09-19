@@ -103,5 +103,13 @@ public class MenuItem {
 	public double getPrice() {
 		return price;
 	}
-	
+
+	public void updateMenuItem(MenuItem updatedMenuItem) {
+    	this.name = updatedMenuItem.getName();
+    	this.description = updatedMenuItem.getDescription();
+    	this.menuType = updatedMenuItem.getMenuType();
+    	this.menuCourse = updatedMenuItem.getMenuCourse();
+    	this.glutenFree = updatedMenuItem.isGlutenFree();
+    	this.price = updatedMenuItem.getPrice();		
+	}
 }

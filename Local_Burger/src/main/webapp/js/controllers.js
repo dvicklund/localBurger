@@ -599,38 +599,84 @@ localburgerApp.controllers.controller('AdminUpdateMenuItemCtl',
          *
          * @param menuItemForm the form object.
          */
-        $scope.createMenuItem = function (menuItemForm) {
-            if (!$scope.isValidMenu(menuItemForm)) {
-                return;
-            }
+	    $scope.initialEvents = [];        
 
-            $scope.loading = true;
-            gapi.client.localburger.createMenuItem($scope.menuItem).
-                execute(function (resp) {
-                    $scope.$apply(function () {
-                        $scope.loading = false;
-                        if (resp.error) {
-                            // The request has failed.
-                            var errorMessage = resp.error.message || '';
-                            $scope.messages = 'Failed to create a menu item : ' + errorMessage;
-                            $scope.alertStatus = 'warning';
-                            $log.error($scope.messages + ' MenuItem : ' + JSON.stringify($scope.menuItem));
 
-                            if (resp.code && resp.code == HTTP_ERRORS.UNAUTHORIZED) {
-                                oauth2Provider.showLoginModal();
-                                return;
+	    $scope.init = function () {
+	    	var retrieveMenuItemCallback = function () {
+	    		$scope.menuItems = [];
+	    		$scope.loading = true;
+	    		gapi.client.localburger.getMenuItems().
+	    			execute(function (resp) {
+	    				$scope.$apply(function () {
+	    					$scope.loading = false;
+	                            if (resp.error) {
+	                            	console.log("ERROR");
+	                                // Failed to get the events.
+	                            } else {
+	                            	console.log("resp.items: " + resp.items);
+	                                angular.forEach(resp.items, function (menuItem) {
+	                                    $scope.menuItems.push(angular.copy(menuItem));
+	                                });
+	                                $scope.initialMenuItems = resp.items.slice();
                             }
-                        } else {
-                            // The request has succeeded.
-                            $scope.messages = 'The menu item has been created : ' + resp.result.name;
-                            $scope.alertStatus = 'success';
-                            $scope.submitted = false;
-                            $scope.menuItem = {};
-                            $log.info($scope.messages + ' : ' + JSON.stringify(resp.result));
-                        }
-                    });
-                });
+	                        });
+	                    }
+	                );
+	            };
+	            if (!oauth2Provider.signedIn) {
+	                var modalInstance = oauth2Provider.showLoginModal();
+	                modalInstance.result.then(retrieveMenuItemCallback);
+	            } else {
+	            	retrieveMenuItemCallback();
+	            }
+	        };
+        $scope.deleteMenuItem = function(menuItem, index){
+        	$scope.loading = true;
+        	gapi.client.localburger.deleteMenuItem(menuItem).
+        		execute(function(resp){
+    				$scope.$apply(function () {
+	    	        	$scope.loading = false;	        			
+	    	        	if(resp.error){
+	    	        		$scope.alertStatus = "warning";
+	    	        		$scope.messages = resp.message;
+	        			}
+	        			else{
+	        				/**
+	        				 * Update both initialMenuItems and menu
+	        				 */
+	        				$scope.initialMenuItems.splice(index,1);
+	        				$scope.menuItems.splice(index,1);
+	        				$scope.alertStatus = "success";
+	        				$scope.messages = resp.message;
+	        			}
+    				});
+        		})
         };
+        $scope.updateMenuItem = function(menuItem, index){
+        	$scope.loading = true;
+        	gapi.client.localburger.updateMenuItem(menuItem).
+        		execute(function(resp){
+        			$scope.$apply(function(){
+        				$scope.loading = false;
+        				if(resp.error){
+        					$scope.alertStatus = "warning";
+        					$scope.messages = "Failed to update";
+        				}
+        				else{
+        					/**
+        					 * Updating initialMenuItems and menuItems
+        					 */
+        					$scope.initialMenuItems[index] = resp.result;
+        					$scope.menuItems[index] = resp.result;
+        					$scope.alertStatus = "success";
+        					$scope.messages = "Updated successfully";
+        				}
+        			});
+        		})
+        };       
+        
+        
     });
 /**
  * @ngdoc controller
@@ -776,7 +822,7 @@ localburgerApp.controllers.controller('AdminUpdateEventCtl',
 		    	        	$scope.loading = false;	        			
 		    	        	if(resp.error){
 		    	        		$scope.alertStatus = "warning";
-		    	        		$scope.message = resp.message;
+		    	        		$scope.messages = resp.message;
 		        			}
 		        			else{
 		        				/**
@@ -785,7 +831,7 @@ localburgerApp.controllers.controller('AdminUpdateEventCtl',
 		        				$scope.initialEvents.splice(index,1);
 		        				$scope.events.splice(index,1);
 		        				$scope.alertStatus = "success";
-		        				$scope.message = resp.message;
+		        				$scope.messages = resp.message;
 		        			}
 	    				});
 	        		})
@@ -799,7 +845,7 @@ localburgerApp.controllers.controller('AdminUpdateEventCtl',
 	        				$scope.loading = false;
 	        				if(resp.error){
 	        					$scope.alertStatus = "warning";
-	        					$scope.message = "Failed to update";
+	        					$scope.messages = "Failed to update";
 	        				}
 	        				else{
 	        					/**
@@ -808,10 +854,9 @@ localburgerApp.controllers.controller('AdminUpdateEventCtl',
 	        					$scope.initialEvents[index] = resp.result;
 	        					$scope.events[index] = resp.result;
 	        					$scope.alertStatus = "success";
-	        					$scope.message = "Updated successfully";
+	        					$scope.messages = "Updated successfully";
 	        				}
 	        			});
 	        		})
 	        };
     });
-   

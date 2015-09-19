@@ -1,17 +1,8 @@
 <h1 style="text-align:center;">Check out our events</h1>
 <div ng-controller="EventsCtl">
-    <div class="row">
-        <div class="col-lg-12">
-            <div id="messages" class="alert alert-{{alertStatus}}" ng-show="messages">
-                <span ng-bind="messages"></span>
-                <i class="dismiss-messages pull-right glyphicon glyphicon-remove" ng-click="messages = ''"
-                   ng-show="messages"></i>
-            </div>
-        </div>
-    </div>
-    <div ng-repeat="event in events">
-        <h2>{{event.name}}</h2>
-    	<p>On {{event.date | date: 'MMMM d, yyyy'}} from {{event.startHour}} to {{event.startHour + event.durationHour}}</p>
-    	<p>{{event.description}}</p>
+    <div ng-repeat="event in events" class="repeat-item">
+	        <h2>{{event.name}}</h2>
+	    	<p>On {{event.date | date: 'MMMM d, yyyy'}} from {{event.startHour}} to {{event.startHour + event.durationHour}}</p>
+	    	<p>{{event.description}}</p>
     </div>
 </div>

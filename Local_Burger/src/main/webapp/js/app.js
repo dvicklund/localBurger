@@ -12,7 +12,7 @@
  *
  */
 var app = angular.module('localburgerApp',
-    ['localburgerControllers', 'ngRoute', 'ui.bootstrap']).
+    ['localburgerControllers', 'ngRoute', 'ui.bootstrap', 'ngAnimate']).
     config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
@@ -34,7 +34,7 @@ var app = angular.module('localburgerApp',
                 }).
                 when('/admin/menu', {
                     templateUrl: '/partials/Admin_UpdateMenu.html',
-                    controller: 'AdminUpdateItemCtl'
+                    controller: 'AdminUpdateMenuItemCtl'
                 }).                
                 when('/admin/menu/add', {
                     templateUrl: '/partials/Admin_AddMenu.html',

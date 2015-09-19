@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-md-8">
             <h3>Update or Delete Events</h3>
-            <div ng-repeat="event in events">
+            <div ng-repeat="event in events" class="repeat-item">
 	           <form name="eventForm" novalidate role="form">
 	           		<p>{{events[$index].id}}</p>
 	                <div class="form-group" ng-class="{'has-warning': events[$index].name != initialEvents[$index].name}">
@@ -20,12 +20,11 @@
 	                    <span class="label label-warning" ng-show='events[$index].name != initialEvents[$index].name'> Changed</span>
 	                    <input id="name" type="text" name="name" ng-model="event.name" class="form-control"/>
 	                </div>
-					<!-- deleteEvent() and saveEvent() receive a parameter variable for the long entity datastore id-->
 	                <button ng-click="deleteEvent(event, $index)" class="btn btn-primary"
 	                        ng-disabled="loading">Delete event
 	                </button>
-	                <button ng-click="saveEvent(event, $index)" class="btn btn-primary"
-	                        ng-disabled="loading">Update event
+	                <button ng-click="updateEvent(event, $index)" class="btn btn-primary"
+	                        ng-disabled="loading || events[$index].name === initialEvents[$index].name">Update event
 	                </button>
 	            </form>   
             </div>

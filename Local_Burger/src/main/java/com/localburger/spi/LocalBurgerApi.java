@@ -157,7 +157,7 @@ public class LocalBurgerApi {
 	 Date midnightDate = new Date(time - time % (60 * 60 * 60 * 1000));
 	 System.out.println(midnightDate);
 
-	 Query<Event> query = ofy().load().type(Event.class).filter("date >=", date).order("date");
+	 Query<Event> query = ofy().load().type(Event.class).filter("date >=", midnightDate).order("date");
 	 return query.list();
 }   
  
@@ -176,7 +176,47 @@ public static class WrappedResult{
 		return message;
 	}
 }
+@ApiMethod(
+		 name = "deleteMenuItem",
+		 path = "deleteMenuItem",
+		 httpMethod = HttpMethod.POST
+		 )
+public WrappedResult deleteMenuItem(User user, MenuItem m)
+		throws UnauthorizedException {
+  if (user == null) {
+      throw new UnauthorizedException("Authorization required");
+  }	
+	long menuItemId = m.getId();
+	System.out.println("\n\n" + m.getName() + "\n\n");
+	if(m != null){
+		ofy().delete().type(MenuItem.class).id(m.getId()).now();
+		System.out.println("Deleted");
+		return new WrappedResult(true, "SUCCESS: Menu Item deleted with id: " + menuItemId);
+	}
+	else{
+		System.out.println("Not Deleted");
+		return new WrappedResult(false, "FAILED: Menu Item not deleted with id: " + menuItemId);
+	}
+}
 
+
+@ApiMethod(
+		name = "updateMenuItem",
+		path = "updateMenuItem",
+		httpMethod = HttpMethod.POST
+		)
+public MenuItem updateMenuItem(User user, MenuItem m) throws UnauthorizedException {
+	if(user == null){
+		throw new UnauthorizedException("Authorization Required");
+	}
+	MenuItem menuItemUpdating = ofy().load().type(MenuItem.class).id(m.getId()).now();
+	if(menuItemUpdating != null){
+		menuItemUpdating.updateMenuItem(m);
+		ofy().save().entity(menuItemUpdating).now();
+		System.out.println("MenuItem updated");
+	}
+	return menuItemUpdating;
+}
 
 @ApiMethod(
 		 name = "deleteEvent",
