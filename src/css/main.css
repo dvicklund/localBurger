@@ -1,10 +1,10 @@
 a {
-  color: #295;
+  color: #AA7938;
   text-decoration: none;
 }
 
 a:hover {
-  color: #051;
+  color: black;
 }
 
 a:visited {
@@ -18,7 +18,9 @@ aside {
 
 header {
   width: 100%;
-  margin: 1em auto;
+  margin: 0 auto;
+  background-color: #F8E8C1;
+  padding-top: 1em;
 }
 
 #mainMenu li {
